@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { BiPlusMedical } from "react-icons/bi";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import todoImg from "./img/img.svg";
 import "./todo-2Style.scss";
 
@@ -14,21 +17,39 @@ const getLocalItems = () => {
 const TodoTwo = () => {
   const [addItems, setItems] = useState("");
   const [storeItems, setStoreItems] = useState(getLocalItems());
+  const [toggle, setToggle] = useState(true);
+  const [isEditItem, setIsEditItem] = useState(null);
 
   //new item added
   const addNewItem = () => {
     if (!addItems) {
-      alert("Please Write Something");
+      alert("Please fill Data");
+    } else if (addItems && !toggle) {
+      setStoreItems(
+        storeItems.map((elem) => {
+          if (elem.id === isEditItem) {
+            return { ...elem, name: addItems };
+          }
+          return elem;
+        })
+      );
+      setToggle(true);
+      setItems("");
+      setIsEditItem(null);
     } else {
-      setStoreItems([...storeItems, addItems]);
+      let allInputData = {
+        id: new Date().getTime().toString(),
+        name: addItems,
+      };
+      setStoreItems([...storeItems, allInputData]);
       setItems("");
     }
   };
 
   // remove each item
   const removeItem = (index) => {
-    const updateItem = storeItems.filter((value, id) => {
-      return index !== id;
+    const updateItem = storeItems.filter((value) => {
+      return index !== value.id;
     });
     setStoreItems(updateItem);
   };
@@ -41,7 +62,16 @@ const TodoTwo = () => {
   useEffect(() => {
     localStorage.setItem("lists", JSON.stringify(storeItems));
   }, [storeItems]);
-
+  //edit items
+  const editItem = (id) => {
+    let newEditItem = storeItems.find((value) => {
+      return value.id === id;
+    });
+    // console.log(newEditItem);
+    setItems(newEditItem.name);
+    setIsEditItem(id);
+    setToggle(false);
+  };
   return (
     <>
       <div className="main_div">
@@ -64,18 +94,30 @@ const TodoTwo = () => {
               }}
             />
             <button title="Add item" onClick={addNewItem}>
-              +
+              {toggle ? <BiPlusMedical /> : <FaEdit />}
             </button>
           </div>
 
           <div className="listItems">
-            {storeItems.map((item, index) => {
+            {storeItems.map((item) => {
               return (
-                <div key={index} className="item">
-                  <span>{item}</span>
-                  <span className="remove" onClick={() => removeItem(index)}>
-                    X
-                  </span>
+                <div key={item.id} className="item">
+                  <span>{item.name}</span>
+                  <div>
+                    <span
+                      className=" edit"
+                      titel="Edit Item"
+                      onClick={() => editItem(item.id)}
+                    >
+                      <FaEdit />
+                    </span>
+                    <span
+                      className="remove"
+                      onClick={() => removeItem(item.id)}
+                    >
+                      <MdDelete />
+                    </span>
+                  </div>
                 </div>
               );
             })}

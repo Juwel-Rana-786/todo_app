@@ -41,7 +41,7 @@ img {
 button {
   border: none;
   background-color: transparent;
-  font-size: 20px;
+
   cursor: pointer;
 }
 button:hover {
@@ -71,11 +71,14 @@ button:hover {
 }
 .remove {
   cursor: pointer;
+  margin-left: 5px;
 }
 .remove:hover {
   color: red;
 }
-
+.edit:hover {
+  color: rgb(46, 235, 46);
+}
 /* CSS */
 .button-26 {
   appearance: button;

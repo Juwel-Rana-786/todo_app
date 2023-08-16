@@ -15,6 +15,9 @@ code {
 ::-webkit-scrollbar {
   width: 0px;
 }
+::-moz-scrollbar {
+  width: 0px;
+}
 
 /* Track */
 ::-webkit-scrollbar-track {
